@@ -8,6 +8,7 @@ const io = getIo(() => {
 
 io.on('connection', socket => {
   console.log('connection:', socket.id)
+  socket.emit('connected')
 })
 
 function update (): void {

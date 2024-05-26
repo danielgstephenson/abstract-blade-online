@@ -1,55 +1,58 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getIo = void 0;
-var express = require("express");
-var http = require("http");
-var https = require("https");
-var fs = require("fs-extra");
-var path = require("path");
-var socket_io_1 = require("socket.io");
-var config = {
+const express_1 = __importDefault(require("express"));
+const http_1 = __importDefault(require("http"));
+const https_1 = __importDefault(require("https"));
+const fs_extra_1 = __importDefault(require("fs-extra"));
+const path_1 = __importDefault(require("path"));
+const socket_io_1 = require("socket.io");
+const config = {
     port: 3000,
     secure: false
 };
-var dirname = path.dirname(__filename);
-var configPath = path.join(dirname, '../config.json');
-var fileExists = fs.existsSync(configPath);
+const dirname = path_1.default.dirname(__filename);
+const configPath = path_1.default.join(dirname, '../config.json');
+const fileExists = fs_extra_1.default.existsSync(configPath);
 if (fileExists) {
-    var json = fs.readJSONSync(configPath);
+    const json = fs_extra_1.default.readJSONSync(configPath);
     if (typeof json.port === 'number')
         config.port = json.port;
     if (typeof json.secure === 'boolean')
         config.secure = json.secure;
 }
 console.log(config);
-var app = express();
-var staticPath = path.join(dirname, 'public');
-var staticMiddleware = express.static(staticPath);
+const app = (0, express_1.default)();
+const staticPath = path_1.default.join(dirname, 'public');
+const staticMiddleware = express_1.default.static(staticPath);
 app.use(staticMiddleware);
-var clientHtmlPath = path.join(dirname, 'public', 'client.html');
+const clientHtmlPath = path_1.default.join(dirname, 'public', 'client.html');
 app.get('/', function (req, res) { res.sendFile(clientHtmlPath); });
-var socketIoPath = path.join(dirname, 'node_modules', 'socket.io', 'client-dist');
+const socketIoPath = path_1.default.join(dirname, 'node_modules', 'socket.io', 'client-dist');
 app.get('/socketIo/:fileName', function (req, res) {
-    var filePath = path.join(socketIoPath, req.params.fileName);
+    const filePath = path_1.default.join(socketIoPath, req.params.fileName);
     res.sendFile(filePath);
 });
 function getServer() {
     if (config.secure) {
-        var key = fs.readFileSync('./sis-key.pem');
-        var cert = fs.readFileSync('./sis-cert.pem');
-        var credentials = { key: key, cert: cert };
-        return new https.Server(credentials, app);
+        const key = fs_extra_1.default.readFileSync('./sis-key.pem');
+        const cert = fs_extra_1.default.readFileSync('./sis-cert.pem');
+        const credentials = { key, cert };
+        return new https_1.default.Server(credentials, app);
     }
     else {
-        return new http.Server(app);
+        return new http_1.default.Server(app);
     }
 }
 function getIo(onListen) {
-    var server = getServer();
-    var io = new socket_io_1.Server(server);
+    const server = getServer();
+    const io = new socket_io_1.Server(server);
     io.path(staticPath);
-    server.listen(config.port, function () {
-        console.log("Listening on :".concat(config.port));
+    server.listen(config.port, () => {
+        console.log(`Listening on :${config.port}`);
         if (onListen != null)
             onListen();
     });

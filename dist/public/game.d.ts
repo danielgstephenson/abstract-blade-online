@@ -1,4 +1,4 @@
-import { World } from "planck";
+import { World } from 'planck';
 export declare class Game {
     world: World;
 }
