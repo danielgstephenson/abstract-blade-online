@@ -4,7 +4,7 @@ import { Wall } from '../features/wall'
 import { Vec2 } from 'planck'
 
 export class Arena extends Actor {
-  static width = 2
+  static width = 4
   static height = 2
   northWall: Wall
   southWall: Wall
@@ -19,10 +19,10 @@ export class Arena extends Actor {
       angularDamping: 0
     })
     this.label = 'arena'
-    const northEast = Vec2(Arena.height, Arena.width)
-    const northWest = Vec2(Arena.height, -Arena.width)
-    const southEast = Vec2(-Arena.height, Arena.width)
-    const southWest = Vec2(-Arena.height, -Arena.width)
+    const northEast = Vec2(Arena.width, Arena.height)
+    const northWest = Vec2(-Arena.width, Arena.height)
+    const southEast = Vec2(Arena.width, -Arena.height)
+    const southWest = Vec2(-Arena.width, -Arena.height)
     this.northWall = new Wall(this, [northWest, northEast])
     this.southWall = new Wall(this, [southEast, southWest])
     this.eastWall = new Wall(this, [northEast, southEast])
