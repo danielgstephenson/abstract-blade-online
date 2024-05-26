@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "module": "CommonJS",
+    "target": "ES5",
+    "outDir": "../dist",
+    "lib": [
+      "ES6",
+      "dom"
+    ],
+    "strict": true,
+    "sourceMap": true,
+    "composite": true,
+    "rootDir": ".",
+  },
+  "include": ["**/*"],
+  "exclude": ["../dist/**/*"]
+}
