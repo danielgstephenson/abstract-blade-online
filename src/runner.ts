@@ -1,5 +1,4 @@
 import { Game } from './game'
-import { GameSummary } from './summaries/gameSummary'
 
 export class Runner {
   game: Game
@@ -10,7 +9,8 @@ export class Runner {
   }
 
   step (): void {
+    this.game.fighters.forEach(fighter => fighter.preStep())
     this.game.world.step(this.stepSize)
-    this.game.summary = new GameSummary(this.game)
+    this.game.postStep()
   }
 }

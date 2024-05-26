@@ -1,15 +1,11 @@
-import { Feature } from '../features/feature'
 import { Game } from '../game'
-import { FeatureSummary } from './featureSummary'
+import { FighterSummary } from './fighterSummary'
 
 export class GameSummary {
-  featureSummaries: FeatureSummary[]
+  fighters: FighterSummary[]
 
   constructor (game: Game) {
-    const fixtures = game.getFixtures()
-    this.featureSummaries = fixtures.map(fixture => {
-      const feature = fixture.getUserData() as Feature
-      return new FeatureSummary(feature)
-    })
+    const fighters = [...game.fighters.values()]
+    this.fighters = fighters.map(fighter => new FighterSummary(fighter))
   }
 }

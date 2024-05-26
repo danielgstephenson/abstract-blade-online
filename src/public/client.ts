@@ -1,24 +1,29 @@
 import io from 'socket.io-client'
-import { GameSummary } from '../summaries/gameSummary'
-import { FeatureSummary } from '../summaries/featureSummary'
+import { PlayerSummary } from '../summaries/playerSummary'
+import { Renderer } from '../renderer'
+import { Input } from './input'
+import { InputSummary } from '../summaries/inputSummary'
 
 const socket = io()
+const input = new Input()
+const renderer = new Renderer()
 
-let featureSummaries: FeatureSummary[] = []
+let inputSummary: InputSummary = new InputSummary(input)
 
 window.onmousedown = (event: MouseEvent) => {
-  console.log('featureSummaries', featureSummaries)
+  // console.log('position', renderer.fighterSummaries[0].position)
+  console.log(inputSummary.moveDir)
 }
 
 socket.on('connected', () => {
   console.log('connected')
   setInterval(updateServer, 1 / 60)
 })
-socket.on('gameSummary', (gameSummary: GameSummary) => {
-  featureSummaries = gameSummary.featureSummaries
+socket.on('summary', (summary: PlayerSummary) => {
+  renderer.readSummary(summary)
 })
 
 function updateServer (): void {
-  const msg = {}
-  socket.emit('clientUpdateServer', msg)
+  inputSummary = new InputSummary(input)
+  socket.emit('input', inputSummary)
 }

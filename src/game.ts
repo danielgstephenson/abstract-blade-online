@@ -1,34 +1,21 @@
-import { World, Body, Fixture } from 'planck'
-import { Player } from './actors/player'
+import { World } from 'planck'
+import { Fighter } from './actors/fighter'
 import { Actor } from './actors/actor'
 import { GameSummary } from './summaries/gameSummary'
+import { Player } from './player'
 
 export class Game {
   world = new World()
-  actors = new Map<number, Actor>()
+  actors = new Map<string, Actor>()
+  fighters = new Map<string, Fighter>()
   players = new Map<string, Player>()
-  summary = new GameSummary(this)
+  summary: GameSummary
 
-  getBodies (): Body[] {
-    const bodies = []
-    for (
-      let body = this.world.getBodyList();
-      body != null;
-      body = body.getNext()
-    ) {
-      bodies.push(body)
-    }
-    return bodies
+  constructor () {
+    this.summary = new GameSummary(this)
   }
 
-  getFixtures (): Fixture[] {
-    const fixtures: Fixture[] = []
-    const bodies = this.getBodies()
-    bodies.forEach(body => {
-      for (let fixture = body.getFixtureList(); fixture != null; fixture = fixture.getNext()) {
-        fixtures.push(fixture)
-      }
-    })
-    return fixtures
+  postStep (): void {
+    this.summary = new GameSummary(this)
   }
 }
