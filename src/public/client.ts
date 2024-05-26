@@ -11,8 +11,8 @@ const renderer = new Renderer()
 let inputSummary: InputSummary = new InputSummary(input)
 
 window.onmousedown = (event: MouseEvent) => {
-  // console.log('position', renderer.fighterSummaries[0].position)
-  console.log(inputSummary.moveDir)
+  console.log('position', renderer.fighterSummaries[0].position)
+  socket.emit('click')
 }
 
 socket.on('connected', () => {

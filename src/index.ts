@@ -23,6 +23,16 @@ io.on('connection', socket => {
     const summary = new PlayerSummary(player)
     socket.emit('summary', summary)
   })
+  socket.on('click', () => {
+    const ids = [...game.actors.keys()]
+    console.log('keys', ids)
+    const actors = [...game.actors.values()]
+    actors.forEach(actor => {
+      actor.getFixtures().forEach(fixture => {
+        console.log(actor.id, fixture.getShape())
+      })
+    })
+  })
   socket.on('disconnect', () => {
     console.log('disconnect:', socket.id)
     player.remove()

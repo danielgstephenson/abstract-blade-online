@@ -1,4 +1,4 @@
-import { BodyDef, Body } from 'planck'
+import { BodyDef, Body, Fixture } from 'planck'
 import { Game } from '../game'
 
 export class Actor {
@@ -17,10 +17,20 @@ export class Actor {
       this.id = id
       this.body = this.game.world.createBody(bodyDef)
       this.body.setUserData(this)
+      this.game.actors.set(this.id, this)
     }
   }
 
+  getFixtures (): Fixture[] {
+    const fixtures = []
+    for (let fixture = this.body.getFixtureList(); fixture != null; fixture = fixture.getNext()) {
+      fixtures.push(fixture)
+    }
+    return fixtures
+  }
+
   remove (): void {
+    this.game.actors.delete(this.id)
     this.removed = true
   }
 }
