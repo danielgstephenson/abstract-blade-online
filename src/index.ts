@@ -8,8 +8,7 @@ import { Arena } from './actors/arena'
 import { Config } from './config'
 
 const game = new Game()
-const config = new Config()
-const io = getIo(config)
+const io = getIo(game.config)
 
 io.on('connection', socket => {
   console.log('connect:', socket.id)
