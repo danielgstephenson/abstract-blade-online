@@ -4,8 +4,8 @@ import { Wall } from '../features/wall'
 import { Vec2 } from 'planck'
 
 export class Arena extends Actor {
-  static hx = 12
-  static hy = 7
+  static hx = 24
+  static hy = 14
   northWall: Wall
   southWall: Wall
   eastWall: Wall
