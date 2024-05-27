@@ -4,7 +4,7 @@ import { Feature } from './feature'
 
 export class Blade extends Feature {
   static hy = 0.17
-  static start = 1.5
+  static start = 1
   static narrow = 6
   static reach = 7
 

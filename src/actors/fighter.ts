@@ -6,9 +6,9 @@ import { clamp, clampVec, normalize } from '../math'
 import { Blade } from '../features/blade'
 
 export class Fighter extends Actor {
-  movePower = 0.2
+  movePower = 0.15
   maxSpeed = 1
-  swingPower = 0.02
+  swingPower = 0.03
   maxSpin = 1
   position = Vec2(0, 0)
   velocity = Vec2(0, 0)

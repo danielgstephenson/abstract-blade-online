@@ -123,7 +123,7 @@ export class Renderer {
     this.context.translate(0.5 * this.canvas.width, 0.5 * this.canvas.height)
     const vmin = Math.min(this.canvas.width, this.canvas.height)
     this.context.scale(0.1 * vmin, -0.1 * vmin)
-    const cameraScale = Math.exp(0.1 * this.camera.zoom - 1)
+    const cameraScale = Math.exp(0.1 * this.camera.zoom - 1.2)
     this.context.scale(cameraScale, cameraScale)
     this.context.translate(-this.camera.position.x, -this.camera.position.y)
   }
