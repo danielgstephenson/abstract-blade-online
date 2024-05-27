@@ -33,8 +33,8 @@ app.get('/socketIo/:fileName', function (req, res) {
 
 function getServer (): https.Server | http.Server {
   if (config.secure) {
-    const key = fs.readFileSync('./sis-key.pem')
-    const cert = fs.readFileSync('./sis-cert.pem')
+    const key = fs.readFileSync('../sis-key.pem')
+    const cert = fs.readFileSync('../sis-cert.pem')
     const credentials = { key, cert }
     return new https.Server(credentials, app)
   } else {
