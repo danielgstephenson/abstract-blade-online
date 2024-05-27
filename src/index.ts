@@ -5,10 +5,11 @@ import { PlayerSummary } from './summaries/playerSummary'
 import { InputSummary } from './summaries/inputSummary'
 import { Vec2 } from 'planck'
 import { Arena } from './actors/arena'
+import { Config } from './config'
 
 const game = new Game()
-
-const io = getIo()
+const config = new Config()
+const io = getIo(config)
 
 io.on('connection', socket => {
   console.log('connect:', socket.id)
