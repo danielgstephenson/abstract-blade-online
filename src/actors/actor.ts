@@ -28,9 +28,4 @@ export class Actor {
     }
     return fixtures
   }
-
-  remove (): void {
-    this.game.actors.delete(this.id)
-    this.removed = true
-  }
 }

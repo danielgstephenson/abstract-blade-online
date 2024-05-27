@@ -42,7 +42,7 @@ function getServer (): https.Server | http.Server {
   }
 }
 
-function getIo (onListen: (() => void) | null): Server {
+function getIo (onListen?: () => void): Server {
   const server = getServer()
   const io = new Server(server)
   io.path(staticPath)

@@ -1,18 +1,17 @@
 import io from 'socket.io-client'
 import { PlayerSummary } from '../summaries/playerSummary'
-import { Renderer } from '../renderer'
+import { Renderer } from './renderer'
 import { Input } from './input'
 import { InputSummary } from '../summaries/inputSummary'
 
 const socket = io()
-const input = new Input()
 const renderer = new Renderer()
+const input = new Input(renderer)
 
 let inputSummary: InputSummary = new InputSummary(input)
 
 window.onmousedown = (event: MouseEvent) => {
-  console.log('position', renderer.fighterSummaries[0].position)
-  socket.emit('click')
+  // socket.emit('click')
 }
 
 socket.on('connected', () => {

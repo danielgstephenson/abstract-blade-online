@@ -14,6 +14,7 @@ export class Player {
   }
 
   remove (): void {
+    console.log('remove player')
     this.fighter.remove()
     this.game.players.delete(this.id)
   }
