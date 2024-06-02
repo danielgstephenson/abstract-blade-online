@@ -65,7 +65,6 @@ export class Fighter extends Actor {
 
   postStep (): void {
     if (this.removed) {
-      console.log('remove body')
       this.game.world.destroyBody(this.body)
       this.game.fighters.delete(this.id)
       return
@@ -80,7 +79,6 @@ export class Fighter extends Actor {
   }
 
   remove (): void {
-    console.log('remove fighter')
     this.game.actors.delete(this.id)
     this.removed = true
   }
