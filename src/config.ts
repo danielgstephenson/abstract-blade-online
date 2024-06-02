@@ -21,5 +21,6 @@ export class Config {
     console.log('port:', this.port)
     console.log('secure:', this.secure)
     console.log('timeScale:', this.timeScale)
+    console.log('bot:', this.bot)
   }
 }
