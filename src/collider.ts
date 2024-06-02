@@ -10,9 +10,10 @@ export class Collider {
   constructor (game: Game) {
     this.game = game
     this.game.world.on('begin-contact', contact => this.beginContact(contact))
+    this.game.world.on('pre-solve', contact => this.preSolve(contact))
   }
 
-  beginContact (contact: Contact): void {
+  preSolve (contact: Contact): void {
     const a = contact.getFixtureA().getUserData() as Feature
     const b = contact.getFixtureB().getUserData() as Feature
     const features = [a, b]
@@ -24,9 +25,13 @@ export class Collider {
       features.forEach(feature => {
         if (feature instanceof Torso) {
           const unsafe = worldManifold.points[0].x * feature.fighter.spawnSign < Arena.safeX
-          if (unsafe) feature.alive = false
+          if (unsafe) {
+            feature.alive = false
+          }
         }
       })
     }
   }
+
+  beginContact (contact: Contact): void {}
 }

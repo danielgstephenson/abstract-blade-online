@@ -4,7 +4,7 @@ import { Fighter } from '../actors/fighter'
 
 export class Blade extends Feature {
   static hy = 0.19
-  static start = 0.6
+  static start = 0.9
   static narrow = 6
   static reach = 7
   fighter: Fighter

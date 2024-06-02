@@ -24,8 +24,8 @@ export class Game {
   collider = new Collider(this)
 
   timeScale = 1
-  timeToWin = 5 // 40
-  timeToWait = 5 // 10
+  timeToWin = 40 // 40
+  timeToWait = 5 // 5
   waited = 0
   score1 = 0
   score2 = 0

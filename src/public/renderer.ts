@@ -45,10 +45,10 @@ export class Renderer {
     this.drawArena()
     this.drawScoreArc()
     this.fighterSummaries.forEach(fighter => {
-      this.drawTorso(fighter)
+      this.drawBlade(fighter)
     })
     this.fighterSummaries.forEach(fighter => {
-      this.drawBlade(fighter)
+      this.drawTorso(fighter)
     })
   }
 
