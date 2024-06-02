@@ -89,20 +89,24 @@ export class Renderer {
     this.context.rect(-Arena.hx, -Arena.hy, 2 * Arena.hx, 2 * Arena.hy)
     this.context.fill()
     this.context.strokeStyle = 'hsl(0 0 5)'
-    this.context.lineWidth = 0.1
+    this.context.lineWidth = 0.2
     this.context.beginPath()
     const startLine = Arena.safeX
     this.context.moveTo(-startLine, 0)
-    this.context.lineTo(startLine, 0)
-    this.context.moveTo(-startLine, Arena.hy)
+    this.context.lineTo(-Arena.scoreRadius, 0)
+    this.context.moveTo(+Arena.scoreRadius, 0)
+    this.context.lineTo(+startLine, 0)
+    this.context.moveTo(-startLine, +Arena.hy)
     this.context.lineTo(-startLine, -Arena.hy)
     this.context.moveTo(0, Arena.hy)
+    this.context.lineTo(0, +Arena.scoreRadius)
+    this.context.moveTo(0, -Arena.scoreRadius)
     this.context.lineTo(0, -Arena.hy)
-    this.context.moveTo(startLine, Arena.hy)
+    this.context.moveTo(startLine, +Arena.hy)
     this.context.lineTo(startLine, -Arena.hy)
     this.context.stroke()
     this.context.beginPath()
-    this.context.arc(0, 0, 1 * Arena.hy, 0, 2 * Math.PI)
+    this.context.arc(0, 0, Arena.outerRadius, 0, 2 * Math.PI)
     this.context.stroke()
     this.context.beginPath()
     this.context.arc(0, 0, Arena.indicatorRadius, 0, 2 * Math.PI)
@@ -110,7 +114,6 @@ export class Renderer {
     this.context.beginPath()
     this.context.arc(0, 0, Arena.scoreRadius, 0, 2 * Math.PI)
     this.context.stroke()
-    this.context.fill()
   }
 
   drawScoreArc (): void {
