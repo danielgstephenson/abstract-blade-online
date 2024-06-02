@@ -11,7 +11,6 @@ export class Renderer {
   context: CanvasRenderingContext2D
   camera = new Camera()
   fighterSummaries: FighterSummary[] = []
-  id = ''
   bladeVertices = [
     Vec2(Blade.start, -Blade.hy),
     Vec2(Blade.narrow, -Blade.hy),
@@ -19,6 +18,12 @@ export class Renderer {
     Vec2(Blade.narrow, Blade.hy),
     Vec2(Blade.start, Blade.hy)
   ]
+
+  color1 = 'blue'
+  color2 = 'rgb(0,120,0)'
+  id = ''
+  scoreDiff = 0
+  waited = 0
 
   constructor () {
     this.canvas = document.getElementById('canvas') as HTMLCanvasElement
@@ -29,6 +34,8 @@ export class Renderer {
   readSummary (summary: PlayerSummary): void {
     this.fighterSummaries = summary.game.fighters
     this.id = summary.id
+    this.scoreDiff = summary.game.scoreDiff
+    this.waited = summary.game.waited
   }
 
   draw (): void {
@@ -36,6 +43,7 @@ export class Renderer {
     this.setupCanvas()
     this.setupCamera()
     this.drawArena()
+    this.drawScoreArc()
     this.fighterSummaries.forEach(fighter => {
       this.drawTorso(fighter)
     })
@@ -59,7 +67,7 @@ export class Renderer {
 
   drawTorso (fighter: FighterSummary): void {
     this.setupContext()
-    this.context.fillStyle = 'blue'
+    this.context.fillStyle = fighter.team === 1 ? this.color1 : this.color2
     this.context.beginPath()
     this.context.arc(
       fighter.position.x,
@@ -83,7 +91,7 @@ export class Renderer {
     this.context.strokeStyle = 'hsl(0 0 5)'
     this.context.lineWidth = 0.1
     this.context.beginPath()
-    const startLine = -0.7 * Arena.hx
+    const startLine = Arena.safeX
     this.context.moveTo(-startLine, 0)
     this.context.lineTo(startLine, 0)
     this.context.moveTo(-startLine, Arena.hy)
@@ -97,12 +105,31 @@ export class Renderer {
     this.context.arc(0, 0, 1 * Arena.hy, 0, 2 * Math.PI)
     this.context.stroke()
     this.context.beginPath()
-    this.context.arc(0, 0, 0.5 * Arena.hy, 0, 2 * Math.PI)
+    this.context.arc(0, 0, Arena.indicatorRadius, 0, 2 * Math.PI)
     this.context.stroke()
-    this.context.fillStyle = 'hsl(240 100 50 / 0.25)'
     this.context.beginPath()
-    this.context.arc(0, 0, 0.05 * Arena.hy, 0, 2 * Math.PI)
+    this.context.arc(0, 0, Arena.scoreRadius, 0, 2 * Math.PI)
+    this.context.stroke()
     this.context.fill()
+  }
+
+  drawScoreArc (): void {
+    this.setupContext()
+    this.context.globalAlpha = 0.2
+    this.context.strokeStyle = this.scoreDiff < 0 ? this.color1 : this.color2
+    this.context.lineWidth = 1 + this.waited * 2 * (Arena.indicatorRadius - Arena.scoreRadius - 0.5)
+    this.context.beginPath()
+    if (this.scoreDiff > 0) {
+      const startAngle = 0.5 * Math.PI
+      const endAngle = startAngle + 2 * Math.PI * this.scoreDiff
+      this.context.arc(0, 0, Arena.indicatorRadius, startAngle, endAngle)
+    }
+    if (this.scoreDiff < 0) {
+      const endAngle = 0.5 * Math.PI
+      const startAngle = endAngle + 2 * Math.PI * this.scoreDiff
+      this.context.arc(0, 0, Arena.indicatorRadius, startAngle, endAngle)
+    }
+    this.context.stroke()
   }
 
   setupCanvas (): void {
@@ -126,5 +153,6 @@ export class Renderer {
     const cameraScale = Math.exp(0.1 * this.camera.zoom - 1.2)
     this.context.scale(cameraScale, cameraScale)
     this.context.translate(-this.camera.position.x, -this.camera.position.y)
+    this.context.globalAlpha = 1
   }
 }

@@ -1,14 +1,15 @@
 import { Polygon, Vec2 } from 'planck'
-import { Actor } from '../actors/actor'
 import { Feature } from './feature'
+import { Fighter } from '../actors/fighter'
 
 export class Blade extends Feature {
-  static hy = 0.17
-  static start = 1
+  static hy = 0.19
+  static start = 0.6
   static narrow = 6
   static reach = 7
+  fighter: Fighter
 
-  constructor (actor: Actor) {
+  constructor (fighter: Fighter) {
     const vertices = [
       Vec2(Blade.start, -Blade.hy),
       Vec2(Blade.narrow, -Blade.hy),
@@ -16,11 +17,13 @@ export class Blade extends Feature {
       Vec2(Blade.narrow, Blade.hy),
       Vec2(Blade.start, Blade.hy)
     ]
-    super(actor, {
+    super(fighter, {
       shape: new Polygon(vertices),
       density: 0.00001,
       friction: 0,
       restitution: 0
     })
+    this.fighter = fighter
+    this.label = 'blade'
   }
 }

@@ -8,8 +8,8 @@ import { Blade } from '../features/blade'
 export class Fighter extends Actor {
   movePower = 0.15
   maxSpeed = 1
-  swingPower = 0.03
-  maxSpin = 1
+  swingPower = 0.015
+  maxSpin = 0.8
   position = Vec2(0, 0)
   velocity = Vec2(0, 0)
   move = Vec2(0, 0)
@@ -18,6 +18,10 @@ export class Fighter extends Actor {
   swing = 0
   torso: Torso
   blade: Blade
+  team = 0
+  spawnSign = 0
+  spawnX = 0
+  spawnAngle = 0
 
   constructor (game: Game, id: string) {
     super(game, id, {
@@ -30,16 +34,33 @@ export class Fighter extends Actor {
     this.blade = new Blade(this)
     this.label = 'fighter'
     this.game.fighters.set(this.id, this)
+    this.joinSmallTeam()
+    this.respawn()
+  }
+
+  joinSmallTeam (): void {
+    this.team = this.game.getSmallTeam()
+    this.spawnSign = 2 * this.team - 3
+    this.spawnX = 20 * this.spawnSign
+    this.spawnAngle = this.team === 1 ? 0 : Math.PI
+  }
+
+  respawn (): void {
+    this.body.setPosition(Vec2(this.spawnX, 0))
+    this.body.setLinearVelocity(Vec2(0, 0))
+    this.body.setAngle(this.spawnAngle)
+    this.body.setAngularVelocity(0)
+    this.torso.alive = true
   }
 
   preStep (): void {
-    if (this.move.length() === 0) this.move = Vec2.mul(this.velocity, -1)
     this.move = normalize(this.move)
-    const force = Vec2.mul(this.move, this.movePower)
+    const move = this.move.length() > 0 ? this.move : Vec2.mul(this.velocity, -1)
+    const force = Vec2.mul(move, this.movePower)
     this.body.applyForce(force, this.body.getWorldCenter())
-    if (this.swing === 0) this.swing = -this.spin
     this.swing = Math.sign(this.swing)
-    this.body.applyTorque(this.swing * this.swingPower)
+    const swing = this.swing !== 0 ? this.swing : -Math.sign(this.spin)
+    this.body.applyTorque(swing * this.swingPower)
   }
 
   postStep (): void {
@@ -55,6 +76,7 @@ export class Fighter extends Actor {
     this.angle = this.body.getAngle()
     this.spin = clamp(-this.maxSpin, this.maxSpin, this.body.getAngularVelocity())
     this.body.setAngularVelocity(this.spin)
+    if (!this.torso.alive) this.respawn()
   }
 
   remove (): void {

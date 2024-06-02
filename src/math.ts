@@ -16,3 +16,7 @@ export function clampVec (vector: Vec2, maxLength: number): Vec2 {
   const direction = normalize(vector)
   return Vec2.mul(direction, maxLength)
 }
+
+export function choose<type> (array: type[]): type {
+  return array[Math.floor(Math.random() * array.length)]
+}

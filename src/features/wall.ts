@@ -9,5 +9,6 @@ export class Wall extends Feature {
       friction: 0,
       restitution: 0
     })
+    this.label = 'wall'
   }
 }

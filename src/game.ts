@@ -9,24 +9,35 @@ import { Config } from './config'
 import { getIo } from './server'
 import { InputSummary } from './summaries/inputSummary'
 import { PlayerSummary } from './summaries/playerSummary'
+import { choose } from './math'
+import { Collider } from './collider'
 
 export class Game {
   world = new World()
   actors = new Map<string, Actor>()
   fighters = new Map<string, Fighter>()
   players = new Map<string, Player>()
+  config = new Config()
   runner = new Runner(this)
   summary = new GameSummary(this)
-  arena = new Arena(this, 'arena')
-  config = new Config()
+  arena = new Arena(this)
+  collider = new Collider(this)
+
+  timeScale = 1
+  timeToWin = 40
+  timeToWait = 10
+  waited = 0
+  score1 = 0
+  score2 = 0
+  scoreDiff = 0
 
   constructor () {
+    this.timeScale = this.config.timeScale
     const io = getIo(this.config)
     io.on('connection', socket => {
       console.log('connect:', socket.id)
       socket.emit('connected')
       const player = new Player(this, socket.id)
-      player.fighter.body.setPosition(Vec2(-0.85 * Arena.hx, 0))
       socket.on('input', (input: InputSummary) => {
         const move = input.move ?? Vec2(0, 0)
         player.fighter.move.x = move.x ?? 0
@@ -45,7 +56,14 @@ export class Game {
     })
   }
 
-  postStep (): void {
-    this.summary = new GameSummary(this)
+  getSmallTeam (): number {
+    let count1 = 0
+    let count2 = 0
+    this.fighters.forEach(fighter => {
+      if (fighter.team === 1) count1 += 1
+      if (fighter.team === 2) count2 += 1
+    })
+    if (count1 === count2) return choose([1, 2])
+    return count2 > count1 ? 1 : 2
   }
 }
