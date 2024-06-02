@@ -5,7 +5,7 @@ export class Config {
   port = 3000
   secure = false
   timeScale = 2
-  bot = false
+  bot = true
 
   constructor () {
     const dirname = path.dirname(__filename)
