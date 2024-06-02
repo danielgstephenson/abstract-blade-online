@@ -19,6 +19,8 @@ export class Runner {
     const dt = this.game.timeScale * (this.time - oldTime) / 1000
     this.game.scoreDiff = this.game.score2 - this.game.score1
     if (Math.abs(this.game.scoreDiff) < 1) {
+      this.game.preStep()
+      this.game.bots.forEach(bot => bot.preStep(dt))
       this.game.fighters.forEach(fighter => fighter.preStep())
       this.game.world.step(dt * this.game.config.timeScale)
       this.game.fighters.forEach(fighter => fighter.postStep())
@@ -43,7 +45,7 @@ export class Runner {
     let count1 = 0
     let count2 = 0
     this.game.fighters.forEach(fighter => {
-      if (fighter.position.length() < Arena.scoreRadius + Torso.radius) {
+      if (fighter.position.length() < Arena.criticalRadius + Torso.radius) {
         if (fighter.team === 1) count1 += 1
         if (fighter.team === 2) count2 += 1
       }

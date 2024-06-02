@@ -6,10 +6,10 @@ import { clamp, clampVec, normalize } from '../math'
 import { Blade } from '../features/blade'
 
 export class Fighter extends Actor {
-  movePower = 0.15
-  maxSpeed = 1
-  swingPower = 0.015
-  maxSpin = 0.8
+  static movePower = 0.15
+  static maxSpeed = 1
+  static swingPower = 0.015
+  static maxSpin = 0.8
   position = Vec2(0, 0)
   velocity = Vec2(0, 0)
   move = Vec2(0, 0)
@@ -56,11 +56,11 @@ export class Fighter extends Actor {
   preStep (): void {
     this.move = normalize(this.move)
     const move = this.move.length() > 0 ? this.move : Vec2.mul(this.velocity, -1)
-    const force = Vec2.mul(move, this.movePower)
+    const force = Vec2.mul(move, Fighter.movePower)
     this.body.applyForce(force, this.body.getWorldCenter())
     this.swing = Math.sign(this.swing)
     const swing = this.swing !== 0 ? this.swing : -Math.sign(this.spin)
-    this.body.applyTorque(swing * this.swingPower)
+    this.body.applyTorque(swing * Fighter.swingPower)
   }
 
   postStep (): void {
@@ -70,10 +70,10 @@ export class Fighter extends Actor {
       return
     }
     this.position = this.body.getPosition()
-    this.velocity = clampVec(this.body.getLinearVelocity(), this.maxSpeed)
+    this.velocity = clampVec(this.body.getLinearVelocity(), Fighter.maxSpeed)
     this.body.setLinearVelocity(this.velocity)
     this.angle = this.body.getAngle()
-    this.spin = clamp(-this.maxSpin, this.maxSpin, this.body.getAngularVelocity())
+    this.spin = clamp(-Fighter.maxSpin, Fighter.maxSpin, this.body.getAngularVelocity())
     this.body.setAngularVelocity(this.spin)
     if (!this.torso.alive) this.respawn()
   }

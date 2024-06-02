@@ -5,6 +5,7 @@ export class Config {
   port = 3000
   secure = false
   timeScale = 2
+  bot = false
 
   constructor () {
     const dirname = path.dirname(__filename)
@@ -15,6 +16,7 @@ export class Config {
       if (typeof json.port === 'number') this.port = json.port
       if (typeof json.secure === 'boolean') this.secure = json.secure
       if (typeof json.timeScale === 'number') this.timeScale = json.timeScale
+      if (typeof json.bot === 'boolean') this.bot = json.bot
     }
     console.log('port:', this.port)
     console.log('secure:', this.secure)

@@ -11,12 +11,14 @@ import { InputSummary } from './summaries/inputSummary'
 import { PlayerSummary } from './summaries/playerSummary'
 import { choose } from './math'
 import { Collider } from './collider'
+import { Bot } from './bot'
 
 export class Game {
   world = new World()
   actors = new Map<string, Actor>()
   fighters = new Map<string, Fighter>()
   players = new Map<string, Player>()
+  bots = new Map<string, Bot>()
   config = new Config()
   runner = new Runner(this)
   summary = new GameSummary(this)
@@ -54,6 +56,16 @@ export class Game {
         player.remove()
       })
     })
+  }
+
+  preStep (): void {
+    if (this.players.size === 1 && this.bots.size === 0 && this.config.bot) {
+      void new Bot(this, 'bot1')
+    }
+    if (this.players.size !== 1 && this.bots.size !== 0) {
+      const botArray = [...this.bots.values()]
+      botArray[0].remove()
+    }
   }
 
   getSmallTeam (): number {

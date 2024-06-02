@@ -93,14 +93,14 @@ export class Renderer {
     this.context.beginPath()
     const startLine = Arena.safeX
     this.context.moveTo(-startLine, 0)
-    this.context.lineTo(-Arena.scoreRadius, 0)
-    this.context.moveTo(+Arena.scoreRadius, 0)
+    this.context.lineTo(-Arena.criticalRadius, 0)
+    this.context.moveTo(+Arena.criticalRadius, 0)
     this.context.lineTo(+startLine, 0)
     this.context.moveTo(-startLine, +Arena.hy)
     this.context.lineTo(-startLine, -Arena.hy)
     this.context.moveTo(0, Arena.hy)
-    this.context.lineTo(0, +Arena.scoreRadius)
-    this.context.moveTo(0, -Arena.scoreRadius)
+    this.context.lineTo(0, +Arena.criticalRadius)
+    this.context.moveTo(0, -Arena.criticalRadius)
     this.context.lineTo(0, -Arena.hy)
     this.context.moveTo(startLine, +Arena.hy)
     this.context.lineTo(startLine, -Arena.hy)
@@ -112,7 +112,7 @@ export class Renderer {
     this.context.arc(0, 0, Arena.indicatorRadius, 0, 2 * Math.PI)
     this.context.stroke()
     this.context.beginPath()
-    this.context.arc(0, 0, Arena.scoreRadius, 0, 2 * Math.PI)
+    this.context.arc(0, 0, Arena.criticalRadius, 0, 2 * Math.PI)
     this.context.stroke()
   }
 
@@ -120,7 +120,7 @@ export class Renderer {
     this.setupContext()
     this.context.globalAlpha = 0.2
     this.context.strokeStyle = this.scoreDiff < 0 ? this.color1 : this.color2
-    this.context.lineWidth = 1 + this.waited * 2 * (Arena.indicatorRadius - Arena.scoreRadius - 0.5)
+    this.context.lineWidth = 1 + this.waited * 2 * (Arena.indicatorRadius - Arena.criticalRadius - 0.5)
     this.context.beginPath()
     if (this.scoreDiff > 0) {
       const startAngle = 0.5 * Math.PI
@@ -153,7 +153,7 @@ export class Renderer {
     this.context.translate(0.5 * this.canvas.width, 0.5 * this.canvas.height)
     const vmin = Math.min(this.canvas.width, this.canvas.height)
     this.context.scale(0.1 * vmin, -0.1 * vmin)
-    const cameraScale = Math.exp(0.1 * this.camera.zoom - 1.2)
+    const cameraScale = Math.exp(0.1 * this.camera.zoom - 0.8)
     this.context.scale(cameraScale, cameraScale)
     this.context.translate(-this.camera.position.x, -this.camera.position.y)
     this.context.globalAlpha = 1

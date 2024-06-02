@@ -26,7 +26,7 @@ export class Collider {
         if (feature instanceof Torso) {
           const unsafe = worldManifold.points[0].x * feature.fighter.spawnSign < Arena.safeX
           if (unsafe) {
-            feature.alive = false
+            setTimeout(() => { feature.alive = false }, 100)
           }
         }
       })
