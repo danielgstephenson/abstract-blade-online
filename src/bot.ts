@@ -10,6 +10,7 @@ export class Bot {
   fighter: Fighter
   centerPoint = Vec2.zero()
   swingSign = 0
+  swingSpeed = 1
 
   constructor (game: Game, id: string) {
     this.game = game
@@ -18,6 +19,7 @@ export class Bot {
     this.game.bots.set(id, this)
     this.chooseCenterPoint()
     this.chooseSwingSign()
+    this.chooseSwingSpeed()
   }
 
   preStep (dt: number): void {
@@ -29,10 +31,15 @@ export class Bot {
   updateTactics (dt: number): void {
     if (Math.random() < dt) this.chooseCenterPoint()
     if (Math.random() < dt / 5) this.chooseSwingSign()
+    if (Math.random() < dt / 5) this.chooseSwingSpeed()
+  }
+
+  chooseSwingSpeed (): void {
+    this.swingSpeed = 1 + 10 * Math.random()
   }
 
   chooseSwingSign (): void {
-    this.swingSign = choose([-1, 0, 1])
+    this.swingSign = choose([-1, 0, 0, 0, 1])
   }
 
   chooseCenterPoint (): void {
@@ -55,7 +62,7 @@ export class Bot {
     const toEnemyVec = dirToFrom(nearestEnemy.position, this.fighter.position)
     const toEnemyAngle = vecToAngle(toEnemyVec)
     const angleDiff = getAngleDiff(toEnemyAngle, this.fighter.angle)
-    const targetSpin = 20 * Fighter.maxSpin * angleDiff / Math.PI
+    const targetSpin = this.swingSpeed * Fighter.maxSpin * angleDiff / Math.PI
     this.fighter.swing = Math.sign(targetSpin - this.fighter.spin)
   }
 
