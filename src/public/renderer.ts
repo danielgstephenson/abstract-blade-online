@@ -54,7 +54,7 @@ export class Renderer {
 
   drawBlade (fighter: FighterSummary): void {
     this.setupContext()
-    this.context.fillStyle = 'hsl(0 0 50)'
+    this.context.fillStyle = 'hsl(0 0 100)'
     this.context.translate(fighter.position.x, fighter.position.y)
     this.context.rotate(fighter.angle)
     this.context.beginPath()
