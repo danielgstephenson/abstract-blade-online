@@ -79,7 +79,7 @@ export class Renderer {
 
   drawArena (): void {
     this.setupContext()
-    this.context.strokeStyle = 'hsl(0 0 20)'
+    this.context.strokeStyle = 'hsl(0 0 30)'
     this.context.lineWidth = 1
     this.context.fillStyle = 'black'
     this.context.beginPath()
@@ -88,7 +88,7 @@ export class Renderer {
     this.context.beginPath()
     this.context.rect(-Arena.hx, -Arena.hy, 2 * Arena.hx, 2 * Arena.hy)
     this.context.fill()
-    this.context.strokeStyle = 'hsl(0 0 5)'
+    this.context.strokeStyle = 'hsl(0 0 30)'
     this.context.lineWidth = 0.2
     this.context.beginPath()
     const startLine = Arena.safeX
