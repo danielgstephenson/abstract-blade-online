@@ -118,7 +118,7 @@ export class Renderer {
 
   drawScoreArc (): void {
     this.setupContext()
-    this.context.globalAlpha = 0.2
+    this.context.globalAlpha = 0.5
     this.context.strokeStyle = this.scoreDiff < 0 ? this.color1 : this.color2
     this.context.lineWidth = 1 + this.waited * 2 * (Arena.indicatorRadius - Arena.criticalRadius - 0.5)
     this.context.beginPath()
