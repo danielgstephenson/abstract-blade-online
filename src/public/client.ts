@@ -10,10 +10,6 @@ const input = new Input(renderer)
 
 let inputSummary: InputSummary = new InputSummary(input)
 
-window.onmousedown = (event: MouseEvent) => {
-  // socket.emit('click')
-}
-
 socket.on('connected', () => {
   console.log('connected')
   setInterval(updateServer, 1 / 60)

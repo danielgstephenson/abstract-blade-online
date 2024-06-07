@@ -18,6 +18,10 @@ export function vecToAngle (vector: Vec2): number {
   return Math.atan2(vector.y, vector.x)
 }
 
+export function angleToDir (angle: number): Vec2 {
+  return Vec2(Math.cos(angle), Math.sin(angle))
+}
+
 export function getAngleDiff (toAngle: number, fromAngle: number): number {
   const v = { x: Math.cos(fromAngle), y: Math.sin(fromAngle) }
   const w = { x: Math.cos(toAngle), y: Math.sin(toAngle) }
