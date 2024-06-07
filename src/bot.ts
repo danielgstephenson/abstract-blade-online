@@ -9,7 +9,7 @@ export class Bot {
   id: string
   fighter: Fighter
   centerPoint = Vec2.zero()
-  swingSign = 0
+  tactic = 0
   swingSpeed = 1
 
   constructor (game: Game, id: string) {
@@ -39,7 +39,7 @@ export class Bot {
   }
 
   chooseSwingSign (): void {
-    this.swingSign = choose([-1, 0, 0, 0, 1])
+    this.tactic = choose([-1, 0, 0, 0, 1])
   }
 
   chooseCenterPoint (): void {
@@ -49,11 +49,14 @@ export class Bot {
   }
 
   aim (): void {
-    if (this.swingSign === 0) {
+    if (this.tactic === 0) {
       this.aimAtNearestEnemy()
       return
     }
-    this.fighter.swing = this.swingSign
+    if (this.tactic === 3) {
+      return
+    }
+    this.fighter.swing = this.tactic
   }
 
   aimAtNearestEnemy (): void {
