@@ -19,7 +19,7 @@ export class Blade extends Feature {
     ]
     super(fighter, {
       shape: new Polygon(vertices),
-      density: 0.00001,
+      density: 0.02,
       friction: 0,
       restitution: 0
     })

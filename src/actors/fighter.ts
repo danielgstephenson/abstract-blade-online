@@ -42,7 +42,7 @@ export class Fighter extends Actor {
     this.team = this.game.getSmallTeam()
     this.spawnSign = 2 * this.team - 3
     this.spawnX = 20 * this.spawnSign
-    this.spawnAngle = this.team === 1 ? Math.PI : 0
+    this.spawnAngle = this.spawnSign * 0.5 * Math.PI
   }
 
   respawn (): void {
@@ -57,10 +57,10 @@ export class Fighter extends Actor {
     this.move = normalize(this.move)
     const move = this.move.length() > 0 ? this.move : Vec2.mul(this.velocity, -1)
     const force = Vec2.mul(move, Fighter.movePower)
-    this.body.applyForce(force, this.body.getWorldCenter())
+    this.body.applyForce(force, this.body.getWorldPoint(Vec2(0, 0)))
     this.swing = Math.sign(this.swing)
-    const swing = this.swing !== 0 ? this.swing : -Math.sign(this.spin)
-    this.body.applyTorque(swing * Fighter.swingPower)
+    // const swing = this.swing !== 0 ? this.swing : -Math.sign(this.spin)
+    // this.body.applyTorque(swing * Fighter.swingPower)
   }
 
   postStep (): void {

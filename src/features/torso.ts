@@ -1,4 +1,4 @@
-import { Circle } from 'planck'
+import { Circle, Vec2 } from 'planck'
 import { Feature } from './feature'
 import { Fighter } from '../actors/fighter'
 
@@ -9,7 +9,7 @@ export class Torso extends Feature {
 
   constructor (fighter: Fighter) {
     super(fighter, {
-      shape: new Circle(Torso.radius),
+      shape: new Circle(Vec2(0, 0), Torso.radius),
       density: 1,
       friction: 0,
       restitution: 0
