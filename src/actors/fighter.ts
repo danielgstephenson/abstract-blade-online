@@ -33,6 +33,11 @@ export class Fighter extends Actor {
     this.torso = new Torso(this)
     this.blade = new Blade(this)
     this.label = 'fighter'
+    this.body.setMassData({
+      mass: 1,
+      center: Vec2(0.1, 0),
+      I: 0.1
+    })
     this.game.fighters.set(this.id, this)
     this.joinSmallTeam()
     this.respawn()
@@ -42,7 +47,7 @@ export class Fighter extends Actor {
     this.team = this.game.getSmallTeam()
     this.spawnSign = 2 * this.team - 3
     this.spawnX = 20 * this.spawnSign
-    this.spawnAngle = this.spawnSign * 0.5 * Math.PI
+    this.spawnAngle = -this.spawnSign * Math.PI
   }
 
   respawn (): void {
@@ -51,13 +56,15 @@ export class Fighter extends Actor {
     this.body.setAngle(this.spawnAngle)
     this.body.setAngularVelocity(0)
     this.torso.alive = true
+    console.log('getPosition', this.body.getPosition())
+    console.log('getWorldCenter', this.body.getWorldCenter())
   }
 
   preStep (): void {
     this.move = normalize(this.move)
     const move = this.move.length() > 0 ? this.move : Vec2.mul(this.velocity, -1)
     const force = Vec2.mul(move, Fighter.movePower)
-    this.body.applyForce(force, this.body.getWorldPoint(Vec2(0, 0)))
+    this.body.applyForce(force, this.body.getPosition())
     this.swing = Math.sign(this.swing)
     // const swing = this.swing !== 0 ? this.swing : -Math.sign(this.spin)
     // this.body.applyTorque(swing * Fighter.swingPower)
