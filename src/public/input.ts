@@ -15,6 +15,10 @@ export class Input {
     window.onmousemove = (event: MouseEvent) => this.onmousemove(event)
     window.onmousedown = (event: MouseEvent) => this.onmousedown(event)
     window.onmouseup = (event: MouseEvent) => this.onmouseup(event)
+    window.ontouchmove = (event: TouchEvent) => this.ontouchmove(event)
+    window.ontouchstart = (event: TouchEvent) => this.ontouchstart(event)
+    window.ontouchend = (event: TouchEvent) => this.ontouchend(event)
+    window.oncontextmenu = () => {}
   }
 
   onkeydown (event: KeyboardEvent): void {
@@ -41,10 +45,27 @@ export class Input {
 
   onmousedown (event: MouseEvent): void {
     this.mouseButtons.set(event.button, true)
+    this.mousePosition.x = event.clientX - 0.5 * window.innerWidth
+    this.mousePosition.y = 0.5 * window.innerHeight - event.clientY
   }
 
   onmouseup (event: MouseEvent): void {
     this.mouseButtons.set(event.button, false)
+  }
+
+  ontouchmove (event: TouchEvent): void {
+    this.mousePosition.x = event.touches[0].clientX - 0.5 * window.innerWidth
+    this.mousePosition.y = 0.5 * window.innerHeight - event.touches[0].clientY
+  }
+
+  ontouchstart (event: TouchEvent): void {
+    this.mouseButtons.set(0, true)
+    this.mousePosition.x = event.touches[0].clientX - 0.5 * window.innerWidth
+    this.mousePosition.y = 0.5 * window.innerHeight - event.touches[0].clientY
+  }
+
+  ontouchend (event: TouchEvent): void {
+    this.mouseButtons.set(0, false)
   }
 
   isMouseButtonDown (button: number): boolean {
