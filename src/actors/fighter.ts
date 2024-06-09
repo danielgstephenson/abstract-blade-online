@@ -56,8 +56,6 @@ export class Fighter extends Actor {
     this.body.setAngle(this.spawnAngle)
     this.body.setAngularVelocity(0)
     this.torso.alive = true
-    console.log('getPosition', this.body.getPosition())
-    console.log('getWorldCenter', this.body.getWorldCenter())
   }
 
   preStep (): void {
