@@ -42,12 +42,10 @@ export class Game {
       console.log('connect:', socket.id)
       socket.emit('connected')
       const player = new Player(this, socket.id)
-      console.log('angle', player.fighter.body.getAngle() / Math.PI)
       socket.on('input', (input: InputSummary) => {
         const move = input.move ?? Vec2(0, 0)
         player.fighter.move.x = move.x ?? 0
         player.fighter.move.y = move.y ?? 0
-        player.fighter.swing = input.swing ?? 0
         const summary = new PlayerSummary(player)
         socket.emit('summary', summary)
       })

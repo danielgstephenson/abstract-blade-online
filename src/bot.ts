@@ -1,7 +1,7 @@
 import { Vec2 } from 'planck'
 import { Fighter } from './actors/fighter'
 import { Game } from './game'
-import { choose, dirToFrom, getAngleDiff, vecToAngle, whichMin } from './math'
+import { angleToDir, choose, clamp, dirToFrom, whichMin } from './math'
 import { Arena } from './actors/arena'
 
 export class Bot {
@@ -10,7 +10,6 @@ export class Bot {
   fighter: Fighter
   centerPoint = Vec2.zero()
   tactic = 0
-  swingSpeed = 1
 
   constructor (game: Game, id: string) {
     this.game = game
@@ -18,60 +17,46 @@ export class Bot {
     this.fighter = new Fighter(game, id)
     this.game.bots.set(id, this)
     this.chooseCenterPoint()
-    this.chooseSwingSign()
-    this.chooseSwingSpeed()
+    this.chooseTactic()
   }
 
   preStep (dt: number): void {
     this.updateTactics(dt)
-    this.moveToCenter()
-    this.aim()
+    this.move()
   }
 
   updateTactics (dt: number): void {
     if (Math.random() < dt) this.chooseCenterPoint()
-    if (Math.random() < dt / 5) this.chooseSwingSign()
-    if (Math.random() < dt / 5) this.chooseSwingSpeed()
+    if (Math.random() < dt / 5) this.chooseTactic()
   }
 
-  chooseSwingSpeed (): void {
-    this.swingSpeed = 1 + 10 * Math.random()
+  chooseTactic (): void {
+    this.tactic = choose([1, 2])
   }
 
-  chooseSwingSign (): void {
-    this.tactic = choose([-1, 0, 0, 0, 1])
+  move (): void {
+    const swingMoveDir = this.getSwingMoveDir()
+    const centerMoveDir = this.getCenterMoveDir()
+    const spinRate = Math.abs(this.fighter.spin) / Fighter.maxSpin
+    const weight = clamp(0, 1, this.tactic * spinRate)
+    this.fighter.move = Vec2.combine(weight, centerMoveDir, 1 - weight, swingMoveDir)
+  }
+
+  getSwingMoveDir (): Vec2 {
+    const spinSign = this.fighter.spin === 0 ? choose([-1, 1]) : Math.sign(this.fighter.spin)
+    const swingAngle = this.fighter.angle - 0.7 * Math.PI * spinSign
+    return angleToDir(swingAngle)
+  }
+
+  getCenterMoveDir (): Vec2 {
+    const targetVelocity = Vec2.mul(0.5, Vec2.sub(this.centerPoint, this.fighter.position))
+    return dirToFrom(targetVelocity, this.fighter.velocity)
   }
 
   chooseCenterPoint (): void {
     const radius = 0.8 * Arena.criticalRadius
     const angle = 2 * Math.PI * Math.random()
     this.centerPoint = Vec2(radius * Math.cos(angle), radius * Math.sin(angle))
-  }
-
-  aim (): void {
-    if (this.tactic === 0) {
-      this.aimAtNearestEnemy()
-      return
-    }
-    if (this.tactic === 3) {
-      return
-    }
-    this.fighter.swing = this.tactic
-  }
-
-  aimAtNearestEnemy (): void {
-    const nearestEnemy = this.getNearestEnemy()
-    if (nearestEnemy == null) return
-    const toEnemyVec = dirToFrom(nearestEnemy.position, this.fighter.position)
-    const toEnemyAngle = vecToAngle(toEnemyVec)
-    const angleDiff = getAngleDiff(toEnemyAngle, this.fighter.angle)
-    const targetSpin = this.swingSpeed * Fighter.maxSpin * angleDiff / Math.PI
-    this.fighter.swing = Math.sign(targetSpin - this.fighter.spin)
-  }
-
-  moveToCenter (): void {
-    const targetVelocity = Vec2.mul(0.5, Vec2.sub(this.centerPoint, this.fighter.position))
-    this.fighter.move = dirToFrom(targetVelocity, this.fighter.velocity)
   }
 
   getNearestEnemy (): Fighter | null {

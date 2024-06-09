@@ -2,11 +2,11 @@ import { Actor } from './actor'
 import { Game } from '../game'
 import { Torso } from '../features/torso'
 import { Vec2 } from 'planck'
-import { clamp, clampVec, normalize } from '../math'
+import { clamp, clampVec, roundDir } from '../math'
 import { Blade } from '../features/blade'
 
 export class Fighter extends Actor {
-  static movePower = 0.15
+  static movePower = 0.1
   static maxSpeed = 1
   static swingPower = 0.015
   static maxSpin = 0.8
@@ -15,7 +15,6 @@ export class Fighter extends Actor {
   move = Vec2(0, 0)
   angle = 0
   spin = 0
-  swing = 0
   torso: Torso
   blade: Blade
   team = 0
@@ -34,9 +33,9 @@ export class Fighter extends Actor {
     this.blade = new Blade(this)
     this.label = 'fighter'
     this.body.setMassData({
-      mass: 1,
-      center: Vec2(0.2, 0),
-      I: 0.2
+      mass: 4,
+      center: Vec2(0.1, 0),
+      I: 1
     })
     this.game.fighters.set(this.id, this)
     this.joinSmallTeam()
@@ -59,11 +58,9 @@ export class Fighter extends Actor {
   }
 
   preStep (): void {
-    this.move = normalize(this.move)
     const move = this.move.length() > 0 ? this.move : Vec2.mul(this.velocity, -1)
-    const force = Vec2.mul(move, Fighter.movePower)
+    const force = roundDir(Vec2.mul(move, Fighter.movePower))
     this.body.applyForce(force, this.body.getPosition())
-    this.swing = Math.sign(this.swing)
   }
 
   postStep (): void {
