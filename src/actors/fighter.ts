@@ -47,7 +47,7 @@ export class Fighter extends Actor {
     this.team = this.game.getSmallTeam()
     this.spawnSign = 2 * this.team - 3
     this.spawnX = 20 * this.spawnSign
-    this.spawnAngle = -this.spawnSign * Math.PI
+    this.spawnAngle = (0.5 - 0.5 * this.spawnSign) * Math.PI
   }
 
   respawn (): void {
