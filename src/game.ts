@@ -9,7 +9,7 @@ import { Config } from './config'
 import { getIo } from './server'
 import { InputSummary } from './summaries/inputSummary'
 import { PlayerSummary } from './summaries/playerSummary'
-import { choose } from './math'
+import { choose, getAngleDiff } from './math'
 import { Collider } from './collider'
 import { Bot } from './bot'
 
@@ -46,7 +46,13 @@ export class Game {
         const move = input.move ?? Vec2(0, 0)
         player.fighter.move.x = move.x ?? 0
         player.fighter.move.y = move.y ?? 0
-        player.fighter.swing = input.swing ?? 0
+        if (input.mouseDown) {
+          const mouseAngle = input.mouseAngle ?? 0
+          const angleDiff = getAngleDiff(mouseAngle, player.fighter.angle)
+          player.fighter.swing = Math.sign(angleDiff)
+        } else {
+          player.fighter.swing = input.swing ?? 0
+        }
         const summary = new PlayerSummary(player)
         socket.emit('summary', summary)
       })

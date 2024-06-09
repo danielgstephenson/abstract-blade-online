@@ -35,7 +35,7 @@ export class Fighter extends Actor {
     this.label = 'fighter'
     this.body.setMassData({
       mass: 1,
-      center: Vec2(0.1, 0),
+      center: Vec2(0, 0),
       I: 0.1
     })
     this.game.fighters.set(this.id, this)
@@ -64,8 +64,8 @@ export class Fighter extends Actor {
     const force = Vec2.mul(move, Fighter.movePower)
     this.body.applyForce(force, this.body.getPosition())
     this.swing = Math.sign(this.swing)
-    // const swing = this.swing !== 0 ? this.swing : -Math.sign(this.spin)
-    // this.body.applyTorque(swing * Fighter.swingPower)
+    const swing = this.swing !== 0 ? this.swing : -Math.sign(this.spin)
+    this.body.applyTorque(swing * Fighter.swingPower)
   }
 
   postStep (): void {
