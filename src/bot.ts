@@ -31,20 +31,20 @@ export class Bot {
   }
 
   chooseTactic (): void {
-    this.tactic = choose([1, 2])
+    this.tactic = 1.5
   }
 
   move (): void {
     const swingMoveDir = this.getSwingMoveDir()
     const centerMoveDir = this.getCenterMoveDir()
-    const spinRate = Math.abs(this.fighter.spin) / Fighter.maxSpin
-    const weight = clamp(0, 1, this.tactic * spinRate)
+    const spinRatio = Math.abs(this.fighter.spin) / Fighter.maxSpin
+    const weight = clamp(0, 1, this.tactic * spinRatio)
     this.fighter.move = Vec2.combine(weight, centerMoveDir, 1 - weight, swingMoveDir)
   }
 
   getSwingMoveDir (): Vec2 {
     const spinSign = this.fighter.spin === 0 ? choose([-1, 1]) : Math.sign(this.fighter.spin)
-    const swingAngle = this.fighter.angle - 0.7 * Math.PI * spinSign
+    const swingAngle = this.fighter.angle - 0.5 * Math.PI * spinSign
     return angleToDir(swingAngle)
   }
 

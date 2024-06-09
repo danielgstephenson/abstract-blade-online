@@ -2,11 +2,11 @@ import { Actor } from './actor'
 import { Game } from '../game'
 import { Torso } from '../features/torso'
 import { Vec2 } from 'planck'
-import { clamp, clampVec, roundDir } from '../math'
+import { clamp, clampVec, normalize } from '../math'
 import { Blade } from '../features/blade'
 
 export class Fighter extends Actor {
-  static movePower = 0.1
+  static movePower = 0.15
   static maxSpeed = 1
   static swingPower = 0.015
   static maxSpin = 0.8
@@ -19,7 +19,7 @@ export class Fighter extends Actor {
   blade: Blade
   team = 0
   spawnSign = 0
-  spawnX = 0
+  spawnPosition = Vec2(0, 0)
   spawnAngle = 0
 
   constructor (game: Game, id: string) {
@@ -33,9 +33,9 @@ export class Fighter extends Actor {
     this.blade = new Blade(this)
     this.label = 'fighter'
     this.body.setMassData({
-      mass: 4,
+      mass: 1,
       center: Vec2(0.1, 0),
-      I: 1
+      I: 0.25
     })
     this.game.fighters.set(this.id, this)
     this.joinSmallTeam()
@@ -45,12 +45,12 @@ export class Fighter extends Actor {
   joinSmallTeam (): void {
     this.team = this.game.getSmallTeam()
     this.spawnSign = 2 * this.team - 3
-    this.spawnX = 20 * this.spawnSign
+    this.spawnPosition = Vec2(20 * this.spawnSign, 0)
     this.spawnAngle = (0.5 - 0.5 * this.spawnSign) * Math.PI
   }
 
   respawn (): void {
-    this.body.setPosition(Vec2(this.spawnX, 0))
+    this.body.setPosition(this.spawnPosition)
     this.body.setLinearVelocity(Vec2(0, 0))
     this.body.setAngle(this.spawnAngle)
     this.body.setAngularVelocity(0)
@@ -59,7 +59,7 @@ export class Fighter extends Actor {
 
   preStep (): void {
     const move = this.move.length() > 0 ? this.move : Vec2.mul(this.velocity, -1)
-    const force = roundDir(Vec2.mul(move, Fighter.movePower))
+    const force = Vec2.mul(normalize(move), Fighter.movePower)
     this.body.applyForce(force, this.body.getPosition())
   }
 

@@ -28,19 +28,6 @@ export function getAngleDiff (toAngle: number, fromAngle: number): number {
   return Math.atan2(w.y * v.x - w.x * v.y, w.x * v.x + w.y * v.y)
 }
 
-export const compassDirs: Vec2[] = []
-range(0, 7).forEach(i => {
-  const angle = i / 8 * 2 * Math.PI
-  const x = Math.cos(angle)
-  const y = Math.sin(angle)
-  compassDirs.push(Vec2(x, y))
-})
-
-export function roundDir (vector: Vec2): Vec2 {
-  const dotProducts = compassDirs.map(compassDir => Vec2.dot(vector, compassDir))
-  return compassDirs[whichMax(dotProducts)].clone()
-}
-
 export function clamp (a: number, b: number, x: number): number {
   return Math.max(a, Math.min(x, b))
 }
