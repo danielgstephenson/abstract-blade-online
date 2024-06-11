@@ -16,8 +16,6 @@ export class InputSummary {
     if (input.isKeyDown('KeyA') || input.isKeyDown('ArrowLeft') || input.isKeyDown('KeyJ')) x -= 1
     if (input.isKeyDown('KeyD') || input.isKeyDown('ArrowRight') || input.isKeyDown('KeyL')) x += 1
     this.move = normalize(Vec2(x, y))
-    if (input.isKeyDown('KeyJ')) this.swing += 1
-    if (input.isKeyDown('KeyK')) this.swing -= 1
     if (input.isKeyDown('Semicolon')) this.swing += 1
     if (input.isKeyDown('Quote')) this.swing -= 1
     this.mouseDown = input.isMouseButtonDown(0)
