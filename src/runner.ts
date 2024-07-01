@@ -37,7 +37,8 @@ export class Runner {
     this.game.score2 = 0
     this.game.waited = 0
     this.game.fighters.forEach(fighter => { fighter.team = 0 })
-    this.game.fighters.forEach(fighter => fighter.joinSmallTeam())
+    this.game.players.forEach(player => player.joinTeam())
+    this.game.bots.forEach(fighter => fighter.joinTeam())
     this.game.fighters.forEach(fighter => fighter.respawn())
   }
 

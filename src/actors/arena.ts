@@ -6,10 +6,10 @@ import { Vec2 } from 'planck'
 export class Arena extends Actor {
   static hx = 35
   static hy = 30
-  static safeX = 17
-  static criticalRadius = 3
-  static indicatorRadius = 8
-  static outerRadius = 13
+  static safeX = 25
+  static criticalRadius = 5
+  static indicatorRadius = 12
+  static outerRadius = 20
   northWall: Wall
   southWall: Wall
   eastWall: Wall

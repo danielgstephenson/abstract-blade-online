@@ -11,6 +11,11 @@ export class Player {
     this.id = id
     this.fighter = new Fighter(game, id)
     this.game.players.set(id, this)
+    this.joinTeam()
+  }
+
+  joinTeam (): void {
+    this.fighter.joinTeam(this.game.getSmallPlayerTeam())
   }
 
   remove (): void {

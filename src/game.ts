@@ -9,9 +9,9 @@ import { Config } from './config'
 import { getIo } from './server'
 import { InputSummary } from './summaries/inputSummary'
 import { PlayerSummary } from './summaries/playerSummary'
-import { choose } from './math'
 import { Collider } from './collider'
 import { Bot } from './bot'
+import { choose } from './math'
 
 // make swingless
 
@@ -60,23 +60,50 @@ export class Game {
   }
 
   preStep (): void {
-    if (this.players.size === 1 && this.bots.size === 0 && this.config.bot) {
-      void new Bot(this, 'bot1')
+    const fighterCount = this.players.size + this.bots.size
+    const targetCount = 4
+    if (fighterCount < targetCount && this.config.bot) {
+      void new Bot(this, `bot${Math.random()}`)
     }
-    if (this.players.size !== 1 && this.bots.size !== 0) {
-      const botArray = [...this.bots.values()]
-      botArray[0].remove()
+    if (this.bots.size > 0 && fighterCount > targetCount) {
+      const count1 = this.getTeamFighterCount(1)
+      const count2 = this.getTeamFighterCount(2)
+      if (count1 !== count2) {
+        const largeTeam = count1 > count2 ? 1 : 2
+        const bots = [...this.bots.values()]
+        const largeTeamBots = bots.filter(bot => bot.fighter.team === largeTeam)
+        if (largeTeamBots.length > 0) largeTeamBots[0].remove()
+      }
     }
   }
 
-  getSmallTeam (): number {
-    let count1 = 0
-    let count2 = 0
+  getTeamFighterCount (team: number): number {
+    let count = 0
     this.fighters.forEach(fighter => {
-      if (fighter.team === 1) count1 += 1
-      if (fighter.team === 2) count2 += 1
+      if (fighter.team === team) count += 1
     })
+    return count
+  }
+
+  getTeamPlayerCount (team: number): number {
+    let count = 0
+    this.players.forEach(player => {
+      if (player.fighter.team === team) count += 1
+    })
+    return count
+  }
+
+  getSmallFighterTeam (): number {
+    const count1 = this.getTeamFighterCount(1)
+    const count2 = this.getTeamFighterCount(2)
     if (count1 === count2) return choose([1, 2])
+    return count2 > count1 ? 1 : 2
+  }
+
+  getSmallPlayerTeam (): number {
+    const count1 = this.getTeamPlayerCount(1)
+    const count2 = this.getTeamPlayerCount(2)
+    if (count1 === count2) return this.getSmallFighterTeam()
     return count2 > count1 ? 1 : 2
   }
 }

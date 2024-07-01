@@ -3,6 +3,7 @@ import { Fighter } from './actors/fighter'
 import { Game } from './game'
 import { angleToDir, choose, clamp, dirToFrom, whichMin } from './math'
 import { Arena } from './actors/arena'
+import { Blade } from './features/blade'
 
 export class Bot {
   game: Game
@@ -16,6 +17,7 @@ export class Bot {
     this.id = id
     this.fighter = new Fighter(game, id)
     this.game.bots.set(id, this)
+    this.joinTeam()
     this.chooseCenterPoint()
     this.chooseTactic()
   }
@@ -35,6 +37,18 @@ export class Bot {
   }
 
   move (): void {
+    const ally = this.getNearestAlly()
+    if (ally != null) {
+      const distance = Vec2.distance(ally.position, this.fighter.position)
+      if (distance < 2 * Blade.reach) {
+        const centerDistance = Vec2.distance(this.fighter.position, this.centerPoint)
+        const allyCenterDistance = Vec2.distance(this.fighter.position, this.centerPoint)
+        if (allyCenterDistance <= centerDistance) {
+          this.fighter.move = dirToFrom(this.fighter.position, ally.position)
+          return
+        }
+      }
+    }
     const swingMoveDir = this.getSwingMoveDir()
     const centerMoveDir = this.getCenterMoveDir()
     const spinRatio = Math.abs(this.fighter.spin) / Fighter.maxSpin
@@ -60,11 +74,21 @@ export class Bot {
   }
 
   getNearestEnemy (): Fighter | null {
-    const fighters = [...this.game.fighters.values()]
-    const enemies = fighters.filter(fighter => fighter.team !== this.fighter.team)
+    const enemies = this.fighter.getEnemies()
     if (enemies.length === 0) return null
     const distances = enemies.map(enemy => Vec2.distance(enemy.position, this.fighter.position))
     return enemies[whichMin(distances)]
+  }
+
+  getNearestAlly (): Fighter | null {
+    const allies = this.fighter.getAllies()
+    if (allies.length === 0) return null
+    const distances = allies.map(enemy => Vec2.distance(enemy.position, this.fighter.position))
+    return allies[whichMin(distances)]
+  }
+
+  joinTeam (): void {
+    this.fighter.joinTeam(this.game.getSmallFighterTeam())
   }
 
   remove (): void {
