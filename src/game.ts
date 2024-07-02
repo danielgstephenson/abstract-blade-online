@@ -62,18 +62,18 @@ export class Game {
   preStep (): void {
     const fighterCount = this.players.size + this.bots.size
     const targetCount = 4
+    const count1 = this.getTeamFighterCount(1)
+    const count2 = this.getTeamFighterCount(2)
+    console.log('counts', count1, count2)
     if (fighterCount < targetCount && this.config.bot) {
       void new Bot(this, `bot${Math.random()}`)
+      return
     }
-    if (this.bots.size > 0 && fighterCount > targetCount) {
-      const count1 = this.getTeamFighterCount(1)
-      const count2 = this.getTeamFighterCount(2)
-      if (count1 !== count2) {
-        const largeTeam = count1 > count2 ? 1 : 2
-        const bots = [...this.bots.values()]
-        const largeTeamBots = bots.filter(bot => bot.fighter.team === largeTeam)
-        if (largeTeamBots.length > 0) largeTeamBots[0].remove()
-      }
+    if (count1 !== count2) {
+      const largeTeam = count1 > count2 ? 1 : 2
+      const bots = [...this.bots.values()]
+      const largeTeamBots = bots.filter(bot => bot.fighter.team === largeTeam)
+      if (largeTeamBots.length > 0) largeTeamBots[0].remove()
     }
   }
 
