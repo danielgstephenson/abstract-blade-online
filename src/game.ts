@@ -64,7 +64,6 @@ export class Game {
     const targetCount = 4
     const count1 = this.getTeamFighterCount(1)
     const count2 = this.getTeamFighterCount(2)
-    console.log('counts', count1, count2)
     if (fighterCount < targetCount && this.config.bot) {
       void new Bot(this, `bot${Math.random()}`)
       return
